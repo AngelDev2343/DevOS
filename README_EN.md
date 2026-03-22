@@ -83,8 +83,8 @@ The default panel is floating and empty. To configure it as a taskbar:
 ## 📥 Download Links
 
 - [DevOS-Live_v1.0.iso](https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso)  
-- [Build-Kit_ES.zip](https://github.com/) *(Not available yet)*  
-- [Build-Kit_EN.zip](https://github.com/) *(Not available yet)*  
+- [Build-Kit_ES.zip](https://github.com/AngelDev2343/DevOS/releases/download/Build_Kit_v1.0-ES/devos-build-kit-es-final.zip)
+- [Build-Kit_EN.zip](https://github.com/AngelDev2343/DevOS/releases/download/Build_Kit_v1.0/devos-build-kit-en-final.zip)
 
 ---
 
