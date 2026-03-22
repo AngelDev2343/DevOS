@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOS — Linux Live OS powered by AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1117;
+    --surface: #111820;
+    --surface2: #1a2330;
+    --border: #1e2d3d;
+    --accent: #00d4ff;
+    --accent2: #0088cc;
+    --accent3: #00ffaa;
+    --warn: #ff6b35;
+    --text: #e8eef4;
+    --text-muted: #6b8299;
+    --text-dim: #3d5166;
+    --glow: rgba(0,212,255,0.15);
+    --glow2: rgba(0,255,170,0.08);
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    gap: 20px;
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo .penguin { font-size: 22px; }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    flex-shrink: 0;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-badge {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-glow 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,170,0.06) 0%, transparent 70%);
+    top: 30%; left: 60%;
+    transform: translate(-50%, -50%);
+    animation: pulse-glow 6s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%,-50%) scale(1.08); }
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.25);
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+    animation: fade-up 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: blink 1.5s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(60px, 10vw, 110px);
+    line-height: 0.92;
+    letter-spacing: -3px;
+    color: var(--text);
+    animation: fade-up 0.8s 0.1s ease both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title .accent-word {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+  }
+
+  .hero-sub {
+    margin-top: 28px;
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 560px;
+    line-height: 1.8;
+    animation: fade-up 0.8s 0.2s ease both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 32px;
+    animation: fade-up 0.8s 0.3s ease both;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge.green { border-color: rgba(0,255,170,0.3); color: var(--accent3); background: rgba(0,255,170,0.05); }
+  .badge.blue  { border-color: rgba(0,212,255,0.3); color: var(--accent); background: rgba(0,212,255,0.05); }
+  .badge.orange { border-color: rgba(255,107,53,0.3); color: var(--warn); background: rgba(255,107,53,0.05); }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 48px;
+    animation: fade-up 0.8s 0.4s ease both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 100%);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,212,255,0.4); }
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    transition: all 0.25s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: fade-up 1s 1s ease both;
+    z-index: 2;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scroll-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-left: 2px solid var(--accent);
+    padding-left: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    max-width: 500px;
+    line-height: 1.8;
+    margin-bottom: 56px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+    margin: 0 48px;
+  }
+
+  /* ── FEATURES GRID ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .feature-card {
+    background: var(--bg2);
+    padding: 40px 36px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .feature-card:hover { background: var(--surface); }
+  .feature-card:hover::after { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .feature-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+
+  .feature-desc {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  /* ── SPECS TABLE ── */
+  .specs-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) { .specs-layout { grid-template-columns: 1fr; } }
+
+  .spec-table {
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .spec-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .spec-row:last-child { border-bottom: none; }
+  .spec-row:hover { background: var(--surface); }
+
+  .spec-key {
+    width: 40%;
+    padding: 16px 20px;
+    color: var(--text-dim);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+
+  .spec-val {
+    flex: 1;
+    padding: 16px 20px;
+    color: var(--text);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+  }
+
+  .spec-val .highlight { color: var(--accent); }
+  .spec-val .highlight-green { color: var(--accent3); }
+
+  /* ── AI SECTION ── */
+  .ai-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    padding: 60px;
+  }
+
+  .ai-section::before {
+    content: 'AI';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 200px;
+    color: rgba(0,212,255,0.03);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .ai-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) { .ai-grid { grid-template-columns: 1fr; } .ai-section { padding: 40px 28px; } }
+
+  .ai-stat-block {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ai-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ai-stat-num {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 52px;
+    letter-spacing: -2px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ai-stat-label {
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .ai-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .ai-card:hover { border-color: var(--accent); }
+
+  .ai-card-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .ai-card-text {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .ai-card-text strong { color: var(--text); }
+
+  .progress-bar-wrap {
+    margin-top: 16px;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 2px;
+    animation: fill-anim 1.5s 0.5s ease both;
+    transform-origin: left;
+  }
+
+  @keyframes fill-anim {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* ── WARNING BOX ── */
+  .warning-box {
+    background: rgba(255,107,53,0.06);
+    border: 1px solid rgba(255,107,53,0.3);
+    padding: 32px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .warning-box::before {
+    content: '⚠';
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.06;
+  }
+
+  .warning-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--warn);
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+  }
+
+  .warning-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .warning-items li {
+    display: flex;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+    align-items: flex-start;
+    line-height: 1.7;
+  }
+
+  .warning-items li .w-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .warning-items li .w-text strong {
+    color: var(--warn);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .warning-items li::before {
+    content: '//';
+    color: var(--warn);
+    flex-shrink: 0;
+    opacity: 0.7;
+    line-height: 1.7;
+  }
+
+  /* ── DOWNLOAD SECTION ── */
+  .download-section {
+    text-align: center;
+  }
+
+  .download-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .dl-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 36px 28px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    border-radius: 2px;
+  }
+
+  .dl-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,255,0.2);
+  }
+
+  .dl-card.inactive {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .dl-card-icon {
+    font-size: 36px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .dl-card-name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+
+  .dl-card-desc {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  .dl-meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .dl-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 10px;
+    padding: 4px 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dl-chip.active { border-color: rgba(0,255,170,0.3); color: var(--accent3); background: rgba(0,255,170,0.05); }
+
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent), #0099bb);
+    color: #000;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 13px 24px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+
+  .btn-download:hover {
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    box-shadow: 0 8px 30px rgba(0,212,255,0.35);
+  }
+
+  .btn-soon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: var(--bg2);
+    border: 1px dashed var(--border);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 13px 24px;
+    border-radius: 2px;
+  }
+
+  /* ── SETUP STEPS ── */
+  .steps {
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 0;
+    counter-increment: step;
+    position: relative;
+  }
+
+  .step::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--accent);
+    min-width: 52px;
+    padding: 22px 0;
+    border-right: 1px solid var(--border);
+    margin-right: 28px;
+    letter-spacing: 0.05em;
+  }
+
+  .step-content {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    flex: 1;
+  }
+
+  .step:last-child .step-content { border-bottom: none; }
+
+  .step-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .step-desc {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .step-code {
+    display: inline-block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--accent3);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-top: 8px;
+  }
+
+  /* ── TERMINAL BLOCK ── */
+  .terminal {
+    background: #050810;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 40px;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+
+  .terminal-title {
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-left: 8px;
+  }
+
+  .terminal-body {
+    padding: 28px 28px;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--accent3); }
+  .t-cmd { color: var(--text); }
+  .t-comment { color: var(--text-dim); }
+  .t-out { color: var(--text-muted); }
+  .t-ok { color: var(--accent3); }
+  .t-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--accent);
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 60px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 24px;
+    background: var(--bg2);
+  }
+
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .footer-copy {
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── FLOATING PARTICLES ── */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: float-particle linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes float-particle {
+    0%   { transform: translateY(100vh) translateX(0);  opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-10px) translateX(var(--drift, 0px)); opacity: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    section { padding: 60px 20px; }
+    footer { padding: 40px 20px; flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+    .ai-section { padding: 32px 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Grid background -->
+<div class="grid-bg"></div>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span class="penguin">🐧</span> DevOS</a>
+  <ul class="nav-links">
+    <li><a href="#features">Características</a></li>
+    <li><a href="#ai">Sobre la IA</a></li>
+    <li><a href="#setup">Instalación</a></li>
+    <li><a href="#download">Descargar</a></li>
+  </ul>
+  <span class="nav-badge">v1.0 Live</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <span class="hero-tag">Proyecto experimental · 80% IA</span>
+
+  <h1 class="hero-title">
+    Dev<span class="accent-word">OS</span>
+  </h1>
+
+  <p class="hero-sub">
+    Sistema operativo <strong>Linux Live</strong> basado en Fedora (RPM),
+    desarrollado en gran parte por inteligencia artificial. Ligero,
+    experimental, y diseñado para demostrar hasta dónde puede llegar la IA
+    en el desarrollo de software complejo.
+  </p>
+
+  <div class="hero-badges">
+    <span class="badge green">● Open Source</span>
+    <span class="badge blue">● Fedora RPM</span>
+    <span class="badge orange">● Experimental</span>
+    <span class="badge blue">● XFCE Desktop</span>
+  </div>
+
+  <div class="hero-cta">
+    <a href="https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso" class="btn-primary">
+      <span>↓ Descargar ISO v1.0</span>
+    </a>
+    <a href="https://github.com/AngelDev2343/DevOS" class="btn-secondary">
+      Ver en GitHub →
+    </a>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FEATURES -->
+<section id="features">
+  <span class="section-label">Características</span>
+  <h2 class="section-title">Todo lo que incluye<br>DevOS</h2>
+  <p class="section-desc">Un sistema operativo pensado para explorar, probar y entender hasta dónde llega la IA en el desarrollo de software real.</p>
+
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <span class="feature-icon">🚀</span>
+      <div class="feature-title">Linux Live Boot</div>
+      <div class="feature-desc">Arranca directamente desde USB o máquina virtual sin necesidad de instalar nada en tu disco duro. Cero riesgo para tu sistema actual.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🤖</span>
+      <div class="feature-title">80% desarrollado por IA</div>
+      <div class="feature-desc">Scripts del sistema, resolución de bugs y arquitectura generados principalmente por Claude y ChatGPT. Un experimento real de desarrollo IA.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🖥️</span>
+      <div class="feature-title">Escritorio XFCE</div>
+      <div class="feature-desc">Entorno de escritorio ligero y rápido con XFCE Panel configurable como barra de tareas clásica. Perfecto para hardware modesto.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📦</span>
+      <div class="feature-title">Base Fedora RPM</div>
+      <div class="feature-desc">Construido sobre la sólida base de Fedora con sistema de paquetes RPM, compatible con un enorme ecosistema de software Linux.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-title">Requisitos mínimos</div>
+      <div class="feature-desc">Solo necesitas 4 núcleos de CPU, 2 GB de RAM y 15 GB de almacenamiento para ejecutarlo sin problemas en VM o hardware real.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔬</span>
+      <div class="feature-title">100% Experimental</div>
+      <div class="feature-desc">Proyecto transparente que documenta el proceso real de desarrollo con IA, incluyendo sus limitaciones y comportamientos curiosos.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AI SECTION -->
+<section id="ai">
+  <span class="section-label">Inteligencia Artificial</span>
+  <h2 class="section-title">Hecho en su mayoría<br>por máquinas</h2>
+  <p class="section-desc">DevOS es un experimento honesto: mostramos exactamente cómo y cuánto contribuyó la IA al proyecto.</p>
+
+  <div class="ai-section reveal">
+    <div class="ai-grid">
+      <div>
+        <div class="ai-stat-block">
+          <div class="ai-stat">
+            <div class="ai-stat-num">80%</div>
+            <div class="ai-stat-label">del código generado por IA</div>
+          </div>
+          <div class="ai-stat">
+            <div class="ai-stat-num">2</div>
+            <div class="ai-stat-label">días de trabajo intenso</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 36px;">
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Claude (scripts + debugging)</span><span>70%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+          </div>
+          <br>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>ChatGPT (correcciones + detalles)</span><span>10%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:10%; background: linear-gradient(90deg, #00cc88, #00aa66);"></div></div>
+          </div>
+          <br>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Intervención humana</span><span>20%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:20%; background: linear-gradient(90deg, #ff6b35, #ff4422);"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ai-card">
+          <div class="ai-card-label">// Claude</div>
+          <div class="ai-card-text">Generó la <strong>mayoría de los scripts del sistema</strong> y resolvió gran parte del debugging. Fue el motor principal del proyecto.</div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-label">// ChatGPT</div>
+          <div class="ai-card-text">Ayudó <strong>corrigiendo errores pequeños</strong> y refinando detalles específicos del sistema operativo.</div>
+        </div>
+        <div class="ai-card" style="border-color: rgba(255,107,53,0.3);">
+          <div class="ai-card-label" style="color: var(--warn);">// Nota sobre la IA</div>
+          <div class="ai-card-text">Un comportamiento curioso: la IA <strong>repite soluciones que ya fallaron</strong>, incluso cuando se le indica. Esto demuestra que aún requiere supervisión humana constante.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SPECS -->
+<section id="specs">
+  <span class="section-label">Especificaciones</span>
+  <h2 class="section-title">Requisitos del sistema</h2>
+  <p class="section-desc">DevOS está diseñado para funcionar en hardware accesible. Estos son los requisitos mínimos recomendados.</p>
+
+  <div class="specs-layout reveal">
+    <div>
+      <div class="spec-table">
+        <div class="spec-row">
+          <div class="spec-key">CPU</div>
+          <div class="spec-val"><span class="highlight">4 núcleos</span></div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-key">RAM</div>
+          <div class="spec-val"><span class="highlight">2 GB</span></div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-key">Almacenamiento</div>
+          <div class="spec-val"><span class="highlight">15 GB</span></div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-key">Modo uso</div>
+          <div class="spec-val"><span class="highlight-green">Live / VM</span></div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-key">Base</div>
+          <div class="spec-val">Fedora RPM</div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-key">Escritorio</div>
+          <div class="spec-val">XFCE</div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-key">Versión</div>
+          <div class="spec-val"><span class="highlight">v1.0 Live</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="warning-box">
+        <div class="warning-title">⚠ Advertencias importantes</div>
+        <ul class="warning-items">
+          <li><span class="w-text">El instalador en el escritorio <strong>NO FUNCIONA</strong> y puede borrar tu disco. No lo uses.</span></li>
+          <li><span class="w-text">Se recomienda usar DevOS únicamente como <strong>Live OS</strong> o dentro de una máquina virtual.</span></li>
+          <li><span class="w-text">Durante el arranque verás <strong>muchos logs en pantalla</strong>. Esto es normal, solo espera a que el sistema cargue.</span></li>
+          <li><span class="w-text">Proyecto experimental — úsalo bajo tu propia responsabilidad.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SETUP -->
+<section id="setup">
+  <span class="section-label">Instalación</span>
+  <h2 class="section-title">¿Cómo usar DevOS?</h2>
+  <p class="section-desc">Sigue estos pasos para poner en marcha DevOS en minutos.</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;" class="reveal">
+    <div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-content">
+            <div class="step-title">Descarga la ISO</div>
+            <div class="step-desc">Obtén la imagen ISO desde el link de descarga oficial. Tamaño aproximado: 2–3 GB.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-content">
+            <div class="step-title">Graba en USB o abre en VM</div>
+            <div class="step-desc">Usa Balena Etcher o Rufus para crear un USB booteable. O simplemente carga la ISO en VirtualBox / QEMU.
+              <span class="step-code">$ balenaEtcher DevOS-Live_v1.0.iso</span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-content">
+            <div class="step-title">Arranca desde USB o VM</div>
+            <div class="step-desc">Reinicia tu equipo y selecciona el USB en el menú de arranque, o inicia la máquina virtual con la ISO cargada.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-content">
+            <div class="step-title">Espera y explora</div>
+            <div class="step-desc">Verás logs durante el arranque. Es normal. Una vez que cargue el escritorio XFCE, puedes comenzar a explorar DevOS en modo Live. Para ver info del sistema instala fastfetch:
+              <span class="step-code">$ sudo dnf install fastfetch -y</span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-content">
+            <div class="step-title">Configura el panel XFCE</div>
+            <div class="step-desc">Arrastra el panel a la parte inferior, haz clic derecho → Configurar panel. Ajusta el ancho al máximo y bloquéalo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+          <span class="terminal-title">devos@live ~ $</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-comment"># Ver versión del sistema</span></div>
+          <div><span class="t-prompt">devos@live</span>:<span class="t-cmd">~$</span> cat /etc/os-release</div>
+          <div><span class="t-out">NAME="DevOS"</span></div>
+          <div><span class="t-out">VERSION="1.0 Live" | ID=fedora</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-comment"># fastfetch no viene preinstalado, hay que instalarlo</span></div>
+          <div><span class="t-prompt">devos@live</span>:<span class="t-cmd">~$</span> sudo dnf install fastfetch -y</div>
+          <div><span class="t-out">[sudo] password for devos: <span style="color:var(--accent);letter-spacing:0.15em">devos</span></span></div>
+          <div><span class="t-ok">✓</span> <span class="t-out">fastfetch instalado correctamente</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-comment"># Ahora sí puedes ver info del sistema</span></div>
+          <div><span class="t-prompt">devos@live</span>:<span class="t-cmd">~$</span> fastfetch</div>
+          <div><span class="t-ok">✓</span> <span class="t-out">OS: DevOS v1.0 Live (Fedora)</span></div>
+          <div><span class="t-ok">✓</span> <span class="t-out">DE: XFCE 4.x | Shell: bash</span></div>
+          <div><span class="t-ok">✓</span> <span class="t-out">AI: 80% generated by Claude</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">devos@live</span>:<span class="t-cmd">~$</span> <span class="t-cursor"></span></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <div class="badge blue">VirtualBox ✓</div>
+        <div class="badge blue">QEMU ✓</div>
+        <div class="badge green">USB Live ✓</div>
+        <div class="badge">Rufus compat.</div>
+        <div class="badge">Balena Etcher</div>
+      </div>
+      <div style="margin-top: 14px; background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); padding: 12px 16px; font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+        <span style="color:var(--accent); font-weight:700;">🔑 Contraseña sudo:</span> La contraseña para comandos que requieran <code style="color:var(--accent3); background:var(--bg); padding:1px 6px; border-radius:2px;">sudo</code> en el sistema Live es <code style="color:var(--accent); background:var(--bg); padding:2px 8px; border-radius:2px; letter-spacing:0.1em;">devos</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- DOWNLOAD -->
+<section id="download" class="download-section">
+  <span class="section-label">Descarga</span>
+  <h2 class="section-title">Obtén DevOS ahora</h2>
+  <p class="section-desc" style="margin: 0 auto 0; text-align: center;">Descarga gratuita y de código abierto. Funciona en USB o máquina virtual.</p>
+
+  <div class="download-cards reveal">
+    <div class="dl-card">
+      <span class="dl-card-icon">💿</span>
+      <div class="dl-card-name">DevOS Live ISO</div>
+      <div class="dl-card-desc">Imagen ISO completa para arranque en USB o máquina virtual. Incluye XFCE y todos los scripts generados por IA.</div>
+      <div class="dl-meta">
+        <span class="dl-chip active">Disponible</span>
+        <span class="dl-chip">v1.0</span>
+        <span class="dl-chip">Fedora</span>
+      </div>
+      <a href="https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso" class="btn-download">
+        ↓ Descargar DevOS-Live_v1.0.iso
+      </a>
+    </div>
+
+    <div class="dl-card inactive">
+      <span class="dl-card-icon">🔧</span>
+      <div class="dl-card-name">Build Kit (ES)</div>
+      <div class="dl-card-desc">Kit completo para compilar DevOS desde cero en español. Scripts, configuraciones y guías de construcción.</div>
+      <div class="dl-meta">
+        <span class="dl-chip">Próximamente</span>
+        <span class="dl-chip">Español</span>
+      </div>
+      <span class="btn-soon">⏳ No disponible aún</span>
+    </div>
+
+    <div class="dl-card inactive">
+      <span class="dl-card-icon">🔨</span>
+      <div class="dl-card-name">Build Kit (EN)</div>
+      <div class="dl-card-desc">Complete build kit to compile DevOS from scratch in English. Scripts, configurations and build guides.</div>
+      <div class="dl-meta">
+        <span class="dl-chip">Coming soon</span>
+        <span class="dl-chip">English</span>
+      </div>
+      <span class="btn-soon">⏳ Not available yet</span>
+    </div>
+  </div>
+
+  <p style="margin-top: 32px; color: var(--text-dim); font-size: 12px; letter-spacing: 0.05em;">
+    Open Source · Gratis · Sin restricciones · <a href="https://github.com/AngelDev2343/DevOS" style="color: var(--accent); text-decoration: none;">github.com/AngelDev2343/DevOS</a>
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">🐧 DevOS</div>
+    <div class="footer-copy">© 2024 AngelDev2343 · Open Source License · Experimental Project</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="https://github.com/AngelDev2343/DevOS">GitHub</a></li>
+    <li><a href="https://github.com/AngelDev2343/DevOS/releases">Releases</a></li>
+    <li><a href="https://claude.ai/share/b553961b-feb0-467a-b3ee-2c5baccf3684">Ver proceso</a></li>
+    <li><a href="#download">Descargar</a></li>
+  </ul>
+</footer>
+
+<script>
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const x = Math.random() * 100;
+    const dur = 8 + Math.random() * 12;
+    const delay = Math.random() * 10;
+    const drift = (Math.random() - 0.5) * 100;
+    p.style.cssText = `
+      left: ${x}%;
+      animation-duration: ${dur}s;
+      animation-delay: ${delay}s;
+      --drift: ${drift}px;
+      width: ${Math.random() > 0.7 ? 3 : 2}px;
+      height: ${Math.random() > 0.7 ? 3 : 2}px;
+      background: ${Math.random() > 0.5 ? 'var(--accent)' : 'var(--accent3)'};
+      opacity: 0;
+    `;
+    container.appendChild(p);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav highlight
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.borderBottomColor = window.scrollY > 50
+      ? 'rgba(0,212,255,0.2)'
+      : 'var(--border)';
+  });
+</script>
+</body>
+</html>
