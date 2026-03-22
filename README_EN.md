@@ -68,6 +68,8 @@ The default panel is floating and empty. To configure it as a taskbar:
 3. Boot from the USB or VM and wait for the system to fully load.  
 4. Explore DevOS in **Live mode**.
 
+> The Live user password is "**devos**"
+
 ---
 
 ## 💻 Recommended Requirements
