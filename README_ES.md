@@ -66,7 +66,9 @@ El panel predeterminado (XFCE Panel) es flotante y vacío. Para configurarlo com
 1. Descarga la ISO desde los links de descarga abajo.  
 2. Grábala en un **USB booteable** o ejecútala en una **máquina virtual** (VirtualBox, QEMU, etc.).  
 3. Arranca desde el USB o VM y espera a que el sistema termine de cargar.  
-4. Explora DevOS en modo Live, sin instalar nada en tu disco.  
+4. Explora DevOS en modo Live, sin instalar nada en tu disco.
+
+> La contraseña del usuario de Live es "**devos**"
 
 ---
 
