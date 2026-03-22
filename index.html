@@ -997,6 +997,50 @@
     100% { transform: translateY(-10px) translateX(var(--drift, 0px)); opacity: 0; }
   }
 
+  /* ── LANG SWITCHER ── */
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+  }
+
+  .lang-btn:hover { color: var(--text); }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: #000;
+  }
+
+  .lang-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── I18N FADE ── */
+  [data-i18n] { transition: opacity 0.15s ease; }
+  body.lang-switching [data-i18n] { opacity: 0; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 14px 20px; }
@@ -1022,12 +1066,16 @@
 <nav>
   <a href="#" class="nav-logo"><span class="penguin">🐧</span> DevOS</a>
   <ul class="nav-links">
-    <li><a href="#features">Características</a></li>
-    <li><a href="#ai">Sobre la IA</a></li>
-    <li><a href="#setup">Instalación</a></li>
-    <li><a href="#download">Descargar</a></li>
+    <li><a href="#features" data-i18n="nav_features">Características</a></li>
+    <li><a href="#ai" data-i18n="nav_ai">Sobre la IA</a></li>
+    <li><a href="#setup" data-i18n="nav_setup">Instalación</a></li>
+    <li><a href="#download" data-i18n="nav_download">Descargar</a></li>
   </ul>
-  <span class="nav-badge">v1.0 Live</span>
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="es">ES</button>
+    <span class="lang-sep"></span>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -1035,13 +1083,13 @@
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
 
-  <span class="hero-tag">Proyecto experimental · 80% IA</span>
+  <span class="hero-tag" data-i18n="hero_tag">Proyecto experimental · 80% IA</span>
 
   <h1 class="hero-title">
     Dev<span class="accent-word">OS</span>
   </h1>
 
-  <p class="hero-sub">
+  <p class="hero-sub" data-i18n="hero_sub">
     Sistema operativo <strong>Linux Live</strong> basado en Fedora (RPM),
     desarrollado en gran parte por inteligencia artificial. Ligero,
     experimental, y diseñado para demostrar hasta dónde puede llegar la IA
@@ -1057,16 +1105,14 @@
 
   <div class="hero-cta">
     <a href="https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso" class="btn-primary">
-      <span>↓ Descargar ISO v1.0</span>
+      <span data-i18n="hero_dl">↓ Descargar ISO v1.0</span>
     </a>
-    <a href="https://github.com/AngelDev2343/DevOS" class="btn-secondary">
-      Ver en GitHub →
-    </a>
+    <a href="https://github.com/AngelDev2343/DevOS" class="btn-secondary" data-i18n="hero_gh">Ver en GitHub →</a>
   </div>
 
   <div class="scroll-hint">
     <div class="scroll-line"></div>
-    scroll
+    <span data-i18n="scroll">scroll</span>
   </div>
 </div>
 
@@ -1074,40 +1120,40 @@
 
 <!-- FEATURES -->
 <section id="features">
-  <span class="section-label">Características</span>
-  <h2 class="section-title">Todo lo que incluye<br>DevOS</h2>
-  <p class="section-desc">Un sistema operativo pensado para explorar, probar y entender hasta dónde llega la IA en el desarrollo de software real.</p>
+  <span class="section-label" data-i18n="feat_label">Características</span>
+  <h2 class="section-title" data-i18n="feat_title">Todo lo que incluye<br>DevOS</h2>
+  <p class="section-desc" data-i18n="feat_desc">Un sistema operativo pensado para explorar, probar y entender hasta dónde llega la IA en el desarrollo de software real.</p>
 
   <div class="features-grid reveal">
     <div class="feature-card">
       <span class="feature-icon">🚀</span>
-      <div class="feature-title">Linux Live Boot</div>
-      <div class="feature-desc">Arranca directamente desde USB o máquina virtual sin necesidad de instalar nada en tu disco duro. Cero riesgo para tu sistema actual.</div>
+      <div class="feature-title" data-i18n="f1_title">Linux Live Boot</div>
+      <div class="feature-desc" data-i18n="f1_desc">Arranca directamente desde USB o máquina virtual sin necesidad de instalar nada en tu disco duro. Cero riesgo para tu sistema actual.</div>
     </div>
     <div class="feature-card">
       <span class="feature-icon">🤖</span>
-      <div class="feature-title">80% desarrollado por IA</div>
-      <div class="feature-desc">Scripts del sistema, resolución de bugs y arquitectura generados principalmente por Claude y ChatGPT. Un experimento real de desarrollo IA.</div>
+      <div class="feature-title" data-i18n="f2_title">80% desarrollado por IA</div>
+      <div class="feature-desc" data-i18n="f2_desc">Scripts del sistema, resolución de bugs y arquitectura generados principalmente por Claude y ChatGPT. Un experimento real de desarrollo IA.</div>
     </div>
     <div class="feature-card">
       <span class="feature-icon">🖥️</span>
-      <div class="feature-title">Escritorio XFCE</div>
-      <div class="feature-desc">Entorno de escritorio ligero y rápido con XFCE Panel configurable como barra de tareas clásica. Perfecto para hardware modesto.</div>
+      <div class="feature-title" data-i18n="f3_title">Escritorio XFCE</div>
+      <div class="feature-desc" data-i18n="f3_desc">Entorno de escritorio ligero y rápido con XFCE Panel configurable como barra de tareas clásica. Perfecto para hardware modesto.</div>
     </div>
     <div class="feature-card">
       <span class="feature-icon">📦</span>
-      <div class="feature-title">Base Fedora RPM</div>
-      <div class="feature-desc">Construido sobre la sólida base de Fedora con sistema de paquetes RPM, compatible con un enorme ecosistema de software Linux.</div>
+      <div class="feature-title" data-i18n="f4_title">Base Fedora RPM</div>
+      <div class="feature-desc" data-i18n="f4_desc">Construido sobre la sólida base de Fedora con sistema de paquetes RPM, compatible con un enorme ecosistema de software Linux.</div>
     </div>
     <div class="feature-card">
       <span class="feature-icon">⚡</span>
-      <div class="feature-title">Requisitos mínimos</div>
-      <div class="feature-desc">Solo necesitas 4 núcleos de CPU, 2 GB de RAM y 15 GB de almacenamiento para ejecutarlo sin problemas en VM o hardware real.</div>
+      <div class="feature-title" data-i18n="f5_title">Requisitos mínimos</div>
+      <div class="feature-desc" data-i18n="f5_desc">Solo necesitas 4 núcleos de CPU, 2 GB de RAM y 15 GB de almacenamiento para ejecutarlo sin problemas en VM o hardware real.</div>
     </div>
     <div class="feature-card">
       <span class="feature-icon">🔬</span>
-      <div class="feature-title">100% Experimental</div>
-      <div class="feature-desc">Proyecto transparente que documenta el proceso real de desarrollo con IA, incluyendo sus limitaciones y comportamientos curiosos.</div>
+      <div class="feature-title" data-i18n="f6_title">100% Experimental</div>
+      <div class="feature-desc" data-i18n="f6_desc">Proyecto transparente que documenta el proceso real de desarrollo con IA, incluyendo sus limitaciones y comportamientos curiosos.</div>
     </div>
   </div>
 </section>
@@ -1116,9 +1162,9 @@
 
 <!-- AI SECTION -->
 <section id="ai">
-  <span class="section-label">Inteligencia Artificial</span>
-  <h2 class="section-title">Hecho en su mayoría<br>por máquinas</h2>
-  <p class="section-desc">DevOS es un experimento honesto: mostramos exactamente cómo y cuánto contribuyó la IA al proyecto.</p>
+  <span class="section-label" data-i18n="ai_label">Inteligencia Artificial</span>
+  <h2 class="section-title" data-i18n="ai_title">Hecho en su mayoría<br>por máquinas</h2>
+  <p class="section-desc" data-i18n="ai_desc">DevOS es un experimento honesto: mostramos exactamente cómo y cuánto contribuyó la IA al proyecto.</p>
 
   <div class="ai-section reveal">
     <div class="ai-grid">
@@ -1126,27 +1172,27 @@
         <div class="ai-stat-block">
           <div class="ai-stat">
             <div class="ai-stat-num">80%</div>
-            <div class="ai-stat-label">del código generado por IA</div>
+            <div class="ai-stat-label" data-i18n="ai_stat1">del código generado por IA</div>
           </div>
           <div class="ai-stat">
             <div class="ai-stat-num">2</div>
-            <div class="ai-stat-label">días de trabajo intenso</div>
+            <div class="ai-stat-label" data-i18n="ai_stat2">días de trabajo intenso</div>
           </div>
         </div>
 
         <div style="margin-top: 36px;">
           <div class="progress-bar-wrap">
-            <div class="progress-label"><span>Claude (scripts + debugging)</span><span>70%</span></div>
+            <div class="progress-label"><span data-i18n="ai_p1">Claude (scripts + debugging)</span><span>70%</span></div>
             <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
           </div>
           <br>
           <div class="progress-bar-wrap">
-            <div class="progress-label"><span>ChatGPT (correcciones + detalles)</span><span>10%</span></div>
+            <div class="progress-label"><span data-i18n="ai_p2">ChatGPT (correcciones + detalles)</span><span>10%</span></div>
             <div class="progress-track"><div class="progress-fill" style="width:10%; background: linear-gradient(90deg, #00cc88, #00aa66);"></div></div>
           </div>
           <br>
           <div class="progress-bar-wrap">
-            <div class="progress-label"><span>Intervención humana</span><span>20%</span></div>
+            <div class="progress-label"><span data-i18n="ai_p3">Intervención humana</span><span>20%</span></div>
             <div class="progress-track"><div class="progress-fill" style="width:20%; background: linear-gradient(90deg, #ff6b35, #ff4422);"></div></div>
           </div>
         </div>
@@ -1155,15 +1201,15 @@
       <div>
         <div class="ai-card">
           <div class="ai-card-label">// Claude</div>
-          <div class="ai-card-text">Generó la <strong>mayoría de los scripts del sistema</strong> y resolvió gran parte del debugging. Fue el motor principal del proyecto.</div>
+          <div class="ai-card-text" data-i18n="ai_c1">Generó la <strong>mayoría de los scripts del sistema</strong> y resolvió gran parte del debugging. Fue el motor principal del proyecto.</div>
         </div>
         <div class="ai-card">
           <div class="ai-card-label">// ChatGPT</div>
-          <div class="ai-card-text">Ayudó <strong>corrigiendo errores pequeños</strong> y refinando detalles específicos del sistema operativo.</div>
+          <div class="ai-card-text" data-i18n="ai_c2">Ayudó <strong>corrigiendo errores pequeños</strong> y refinando detalles específicos del sistema operativo.</div>
         </div>
         <div class="ai-card" style="border-color: rgba(255,107,53,0.3);">
-          <div class="ai-card-label" style="color: var(--warn);">// Nota sobre la IA</div>
-          <div class="ai-card-text">Un comportamiento curioso: la IA <strong>repite soluciones que ya fallaron</strong>, incluso cuando se le indica. Esto demuestra que aún requiere supervisión humana constante.</div>
+          <div class="ai-card-label" style="color: var(--warn);" data-i18n="ai_c3_label">// Nota sobre la IA</div>
+          <div class="ai-card-text" data-i18n="ai_c3">Un comportamiento curioso: la IA <strong>repite soluciones que ya fallaron</strong>, incluso cuando se le indica. Esto demuestra que aún requiere supervisión humana constante.</div>
         </div>
       </div>
     </div>
@@ -1174,39 +1220,39 @@
 
 <!-- SPECS -->
 <section id="specs">
-  <span class="section-label">Especificaciones</span>
-  <h2 class="section-title">Requisitos del sistema</h2>
-  <p class="section-desc">DevOS está diseñado para funcionar en hardware accesible. Estos son los requisitos mínimos recomendados.</p>
+  <span class="section-label" data-i18n="spec_label">Especificaciones</span>
+  <h2 class="section-title" data-i18n="spec_title">Requisitos del sistema</h2>
+  <p class="section-desc" data-i18n="spec_desc">DevOS está diseñado para funcionar en hardware accesible. Estos son los requisitos mínimos recomendados.</p>
 
   <div class="specs-layout reveal">
     <div>
       <div class="spec-table">
         <div class="spec-row">
-          <div class="spec-key">CPU</div>
-          <div class="spec-val"><span class="highlight">4 núcleos</span></div>
+          <div class="spec-key" data-i18n="spec_cpu">CPU</div>
+          <div class="spec-val"><span class="highlight" data-i18n="spec_cpu_val">4 núcleos</span></div>
         </div>
         <div class="spec-row">
           <div class="spec-key">RAM</div>
           <div class="spec-val"><span class="highlight">2 GB</span></div>
         </div>
         <div class="spec-row">
-          <div class="spec-key">Almacenamiento</div>
+          <div class="spec-key" data-i18n="spec_storage">Almacenamiento</div>
           <div class="spec-val"><span class="highlight">15 GB</span></div>
         </div>
         <div class="spec-row">
-          <div class="spec-key">Modo uso</div>
+          <div class="spec-key" data-i18n="spec_mode">Modo uso</div>
           <div class="spec-val"><span class="highlight-green">Live / VM</span></div>
         </div>
         <div class="spec-row">
-          <div class="spec-key">Base</div>
+          <div class="spec-key" data-i18n="spec_base">Base</div>
           <div class="spec-val">Fedora RPM</div>
         </div>
         <div class="spec-row">
-          <div class="spec-key">Escritorio</div>
+          <div class="spec-key" data-i18n="spec_desktop">Escritorio</div>
           <div class="spec-val">XFCE</div>
         </div>
         <div class="spec-row">
-          <div class="spec-key">Versión</div>
+          <div class="spec-key" data-i18n="spec_ver">Versión</div>
           <div class="spec-val"><span class="highlight">v1.0 Live</span></div>
         </div>
       </div>
@@ -1214,12 +1260,12 @@
 
     <div>
       <div class="warning-box">
-        <div class="warning-title">⚠ Advertencias importantes</div>
+        <div class="warning-title" data-i18n="warn_title">⚠ Advertencias importantes</div>
         <ul class="warning-items">
-          <li><span class="w-text">El instalador en el escritorio <strong>NO FUNCIONA</strong> y puede borrar tu disco. No lo uses.</span></li>
-          <li><span class="w-text">Se recomienda usar DevOS únicamente como <strong>Live OS</strong> o dentro de una máquina virtual.</span></li>
-          <li><span class="w-text">Durante el arranque verás <strong>muchos logs en pantalla</strong>. Esto es normal, solo espera a que el sistema cargue.</span></li>
-          <li><span class="w-text">Proyecto experimental — úsalo bajo tu propia responsabilidad.</span></li>
+          <li><span class="w-text" data-i18n="warn1">El instalador en el escritorio <strong>NO FUNCIONA</strong> y puede borrar tu disco. No lo uses.</span></li>
+          <li><span class="w-text" data-i18n="warn2">Se recomienda usar DevOS únicamente como <strong>Live OS</strong> o dentro de una máquina virtual.</span></li>
+          <li><span class="w-text" data-i18n="warn3">Durante el arranque verás <strong>muchos logs en pantalla</strong>. Esto es normal, solo espera a que el sistema cargue.</span></li>
+          <li><span class="w-text" data-i18n="warn4">Proyecto experimental — úsalo bajo tu propia responsabilidad.</span></li>
         </ul>
       </div>
     </div>
@@ -1230,45 +1276,45 @@
 
 <!-- SETUP -->
 <section id="setup">
-  <span class="section-label">Instalación</span>
-  <h2 class="section-title">¿Cómo usar DevOS?</h2>
-  <p class="section-desc">Sigue estos pasos para poner en marcha DevOS en minutos.</p>
+  <span class="section-label" data-i18n="setup_label">Instalación</span>
+  <h2 class="section-title" data-i18n="setup_title">¿Cómo usar DevOS?</h2>
+  <p class="section-desc" data-i18n="setup_desc">Sigue estos pasos para poner en marcha DevOS en minutos.</p>
 
   <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;" class="reveal">
     <div>
       <div class="steps">
         <div class="step">
           <div class="step-content">
-            <div class="step-title">Descarga la ISO</div>
-            <div class="step-desc">Obtén la imagen ISO desde el link de descarga oficial. Tamaño aproximado: 2–3 GB.</div>
+            <div class="step-title" data-i18n="s1_title">Descarga la ISO</div>
+            <div class="step-desc" data-i18n="s1_desc">Obtén la imagen ISO desde el link de descarga oficial. Tamaño aproximado: 2–3 GB.</div>
           </div>
         </div>
         <div class="step">
           <div class="step-content">
-            <div class="step-title">Graba en USB o abre en VM</div>
-            <div class="step-desc">Usa Balena Etcher o Rufus para crear un USB booteable. O simplemente carga la ISO en VirtualBox / QEMU.
+            <div class="step-title" data-i18n="s2_title">Graba en USB o abre en VM</div>
+            <div class="step-desc" data-i18n="s2_desc">Usa Balena Etcher o Rufus para crear un USB booteable. O simplemente carga la ISO en VirtualBox / QEMU.
               <span class="step-code">$ balenaEtcher DevOS-Live_v1.0.iso</span>
             </div>
           </div>
         </div>
         <div class="step">
           <div class="step-content">
-            <div class="step-title">Arranca desde USB o VM</div>
-            <div class="step-desc">Reinicia tu equipo y selecciona el USB en el menú de arranque, o inicia la máquina virtual con la ISO cargada.</div>
+            <div class="step-title" data-i18n="s3_title">Arranca desde USB o VM</div>
+            <div class="step-desc" data-i18n="s3_desc">Reinicia tu equipo y selecciona el USB en el menú de arranque, o inicia la máquina virtual con la ISO cargada.</div>
           </div>
         </div>
         <div class="step">
           <div class="step-content">
-            <div class="step-title">Espera y explora</div>
-            <div class="step-desc">Verás logs durante el arranque. Es normal. Una vez que cargue el escritorio XFCE, puedes comenzar a explorar DevOS en modo Live. Para ver info del sistema instala fastfetch:
+            <div class="step-title" data-i18n="s4_title">Espera y explora</div>
+            <div class="step-desc" data-i18n="s4_desc">Verás logs durante el arranque. Es normal. Una vez que cargue el escritorio XFCE, puedes comenzar a explorar DevOS en modo Live. Para ver info del sistema instala fastfetch:
               <span class="step-code">$ sudo dnf install fastfetch -y</span>
             </div>
           </div>
         </div>
         <div class="step">
           <div class="step-content">
-            <div class="step-title">Configura el panel XFCE</div>
-            <div class="step-desc">Arrastra el panel a la parte inferior, haz clic derecho → Configurar panel. Ajusta el ancho al máximo y bloquéalo.</div>
+            <div class="step-title" data-i18n="s5_title">Configura el panel XFCE</div>
+            <div class="step-desc" data-i18n="s5_desc">Arrastra el panel a la parte inferior, haz clic derecho → Configurar panel. Ajusta el ancho al máximo y bloquéalo.</div>
           </div>
         </div>
       </div>
@@ -1311,7 +1357,7 @@
         <div class="badge">Balena Etcher</div>
       </div>
       <div style="margin-top: 14px; background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); padding: 12px 16px; font-size: 12px; color: var(--text-muted); line-height: 1.6;">
-        <span style="color:var(--accent); font-weight:700;">🔑 Contraseña sudo:</span> La contraseña para comandos que requieran <code style="color:var(--accent3); background:var(--bg); padding:1px 6px; border-radius:2px;">sudo</code> en el sistema Live es <code style="color:var(--accent); background:var(--bg); padding:2px 8px; border-radius:2px; letter-spacing:0.1em;">devos</code>
+        <span style="color:var(--accent); font-weight:700;" data-i18n="sudo_label">🔑 Contraseña sudo:</span> <span data-i18n="sudo_desc">La contraseña para comandos que requieran</span> <code style="color:var(--accent3); background:var(--bg); padding:1px 6px; border-radius:2px;">sudo</code> <span data-i18n="sudo_desc2">en el sistema Live es</span> <code style="color:var(--accent); background:var(--bg); padding:2px 8px; border-radius:2px; letter-spacing:0.1em;">devos</code>
       </div>
     </div>
   </div>
@@ -1321,50 +1367,56 @@
 
 <!-- DOWNLOAD -->
 <section id="download" class="download-section">
-  <span class="section-label">Descarga</span>
-  <h2 class="section-title">Obtén DevOS ahora</h2>
-  <p class="section-desc" style="margin: 0 auto 0; text-align: center;">Descarga gratuita y de código abierto. Funciona en USB o máquina virtual.</p>
+  <span class="section-label" data-i18n="dl_label">Descarga</span>
+  <h2 class="section-title" data-i18n="dl_title">Obtén DevOS ahora</h2>
+  <p class="section-desc" style="margin: 0 auto 0; text-align: center;" data-i18n="dl_desc">Descarga gratuita y de código abierto. Funciona en USB o máquina virtual.</p>
 
   <div class="download-cards reveal">
     <div class="dl-card">
       <span class="dl-card-icon">💿</span>
       <div class="dl-card-name">DevOS Live ISO</div>
-      <div class="dl-card-desc">Imagen ISO completa para arranque en USB o máquina virtual. Incluye XFCE y todos los scripts generados por IA.</div>
+      <div class="dl-card-desc" data-i18n="dl1_desc">Imagen ISO completa para arranque en USB o máquina virtual. Incluye XFCE y todos los scripts generados por IA.</div>
       <div class="dl-meta">
-        <span class="dl-chip active">Disponible</span>
+        <span class="dl-chip active" data-i18n="dl_available">Disponible</span>
         <span class="dl-chip">v1.0</span>
         <span class="dl-chip">Fedora</span>
       </div>
-      <a href="https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso" class="btn-download">
+      <a href="https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso" class="btn-download" data-i18n="dl1_btn">
         ↓ Descargar DevOS-Live_v1.0.iso
       </a>
     </div>
 
-    <div class="dl-card inactive">
+    <div class="dl-card">
       <span class="dl-card-icon">🔧</span>
       <div class="dl-card-name">Build Kit (ES)</div>
-      <div class="dl-card-desc">Kit completo para compilar DevOS desde cero en español. Scripts, configuraciones y guías de construcción.</div>
+      <div class="dl-card-desc" data-i18n="dl2_desc">Kit completo para compilar DevOS desde cero en español. Scripts, configuraciones y guías de construcción.</div>
       <div class="dl-meta">
-        <span class="dl-chip">Próximamente</span>
+        <span class="dl-chip active" data-i18n="dl_available">Disponible</span>
+        <span class="dl-chip">v1.0</span>
         <span class="dl-chip">Español</span>
       </div>
-      <span class="btn-soon">⏳ No disponible aún</span>
+      <a href="https://github.com/AngelDev2343/DevOS/releases/download/Build_Kit_v1.0-ES/devos-build-kit-es-final.zip" class="btn-download" data-i18n="dl2_btn">
+        ↓ Descargar Build Kit ES
+      </a>
     </div>
 
-    <div class="dl-card inactive">
+    <div class="dl-card">
       <span class="dl-card-icon">🔨</span>
       <div class="dl-card-name">Build Kit (EN)</div>
-      <div class="dl-card-desc">Complete build kit to compile DevOS from scratch in English. Scripts, configurations and build guides.</div>
+      <div class="dl-card-desc" data-i18n="dl3_desc">Complete build kit to compile DevOS from scratch in English. Scripts, configurations and build guides.</div>
       <div class="dl-meta">
-        <span class="dl-chip">Coming soon</span>
+        <span class="dl-chip active" data-i18n="dl3_available">Available</span>
+        <span class="dl-chip">v1.0</span>
         <span class="dl-chip">English</span>
       </div>
-      <span class="btn-soon">⏳ Not available yet</span>
+      <a href="https://github.com/AngelDev2343/DevOS/releases/download/Build_Kit_v1.0/devos-build-kit-en-final.zip" class="btn-download" data-i18n="dl3_btn">
+        ↓ Download Build Kit EN
+      </a>
     </div>
   </div>
 
   <p style="margin-top: 32px; color: var(--text-dim); font-size: 12px; letter-spacing: 0.05em;">
-    Open Source · Gratis · Sin restricciones · <a href="https://github.com/AngelDev2343/DevOS" style="color: var(--accent); text-decoration: none;">github.com/AngelDev2343/DevOS</a>
+    <span data-i18n="dl_footer">Open Source · Gratis · Sin restricciones ·</span> <a href="https://github.com/AngelDev2343/DevOS" style="color: var(--accent); text-decoration: none;">github.com/AngelDev2343/DevOS</a>
   </p>
 </section>
 
@@ -1372,18 +1424,221 @@
 <footer>
   <div class="footer-left">
     <div class="footer-logo">🐧 DevOS</div>
-    <div class="footer-copy">© 2024 AngelDev2343 · Open Source License · Experimental Project</div>
+    <div class="footer-copy" data-i18n="footer_copy">© 2024 AngelDev2343 · Open Source License · Experimental Project</div>
   </div>
   <ul class="footer-links">
     <li><a href="https://github.com/AngelDev2343/DevOS">GitHub</a></li>
     <li><a href="https://github.com/AngelDev2343/DevOS/releases">Releases</a></li>
-    <li><a href="https://claude.ai/share/b553961b-feb0-467a-b3ee-2c5baccf3684">Ver proceso</a></li>
-    <li><a href="#download">Descargar</a></li>
+    <li><a href="https://claude.ai/share/b553961b-feb0-467a-b3ee-2c5baccf3684" data-i18n="footer_process">Ver proceso</a></li>
+    <li><a href="#download" data-i18n="nav_download">Descargar</a></li>
   </ul>
 </footer>
 
 <script>
-  // Particles
+  // ── I18N TRANSLATIONS ──
+  const translations = {
+    es: {
+      nav_features: 'Características',
+      nav_ai: 'Sobre la IA',
+      nav_setup: 'Instalación',
+      nav_download: 'Descargar',
+      hero_tag: 'Proyecto experimental · 80% IA',
+      hero_sub: 'Sistema operativo <strong>Linux Live</strong> basado en Fedora (RPM), desarrollado en gran parte por inteligencia artificial. Ligero, experimental, y diseñado para demostrar hasta dónde puede llegar la IA en el desarrollo de software complejo.',
+      hero_dl: '↓ Descargar ISO v1.0',
+      hero_gh: 'Ver en GitHub →',
+      scroll: 'scroll',
+      feat_label: 'Características',
+      feat_title: 'Todo lo que incluye<br>DevOS',
+      feat_desc: 'Un sistema operativo pensado para explorar, probar y entender hasta dónde llega la IA en el desarrollo de software real.',
+      f1_title: 'Linux Live Boot',
+      f1_desc: 'Arranca directamente desde USB o máquina virtual sin necesidad de instalar nada en tu disco duro. Cero riesgo para tu sistema actual.',
+      f2_title: '80% desarrollado por IA',
+      f2_desc: 'Scripts del sistema, resolución de bugs y arquitectura generados principalmente por Claude y ChatGPT. Un experimento real de desarrollo IA.',
+      f3_title: 'Escritorio XFCE',
+      f3_desc: 'Entorno de escritorio ligero y rápido con XFCE Panel configurable como barra de tareas clásica. Perfecto para hardware modesto.',
+      f4_title: 'Base Fedora RPM',
+      f4_desc: 'Construido sobre la sólida base de Fedora con sistema de paquetes RPM, compatible con un enorme ecosistema de software Linux.',
+      f5_title: 'Requisitos mínimos',
+      f5_desc: 'Solo necesitas 4 núcleos de CPU, 2 GB de RAM y 15 GB de almacenamiento para ejecutarlo sin problemas en VM o hardware real.',
+      f6_title: '100% Experimental',
+      f6_desc: 'Proyecto transparente que documenta el proceso real de desarrollo con IA, incluyendo sus limitaciones y comportamientos curiosos.',
+      ai_label: 'Inteligencia Artificial',
+      ai_title: 'Hecho en su mayoría<br>por máquinas',
+      ai_desc: 'DevOS es un experimento honesto: mostramos exactamente cómo y cuánto contribuyó la IA al proyecto.',
+      ai_stat1: 'del código generado por IA',
+      ai_stat2: 'días de trabajo intenso',
+      ai_p1: 'Claude (scripts + debugging)',
+      ai_p2: 'ChatGPT (correcciones + detalles)',
+      ai_p3: 'Intervención humana',
+      ai_c1: 'Generó la <strong>mayoría de los scripts del sistema</strong> y resolvió gran parte del debugging. Fue el motor principal del proyecto.',
+      ai_c2: 'Ayudó <strong>corrigiendo errores pequeños</strong> y refinando detalles específicos del sistema operativo.',
+      ai_c3_label: '// Nota sobre la IA',
+      ai_c3: 'Un comportamiento curioso: la IA <strong>repite soluciones que ya fallaron</strong>, incluso cuando se le indica. Esto demuestra que aún requiere supervisión humana constante.',
+      spec_label: 'Especificaciones',
+      spec_title: 'Requisitos del sistema',
+      spec_desc: 'DevOS está diseñado para funcionar en hardware accesible. Estos son los requisitos mínimos recomendados.',
+      spec_cpu: 'CPU',
+      spec_cpu_val: '4 núcleos',
+      spec_storage: 'Almacenamiento',
+      spec_mode: 'Modo uso',
+      spec_base: 'Base',
+      spec_desktop: 'Escritorio',
+      spec_ver: 'Versión',
+      warn_title: '⚠ Advertencias importantes',
+      warn1: 'El instalador en el escritorio <strong>NO FUNCIONA</strong> y puede borrar tu disco. No lo uses.',
+      warn2: 'Se recomienda usar DevOS únicamente como <strong>Live OS</strong> o dentro de una máquina virtual.',
+      warn3: 'Durante el arranque verás <strong>muchos logs en pantalla</strong>. Esto es normal, solo espera a que el sistema cargue.',
+      warn4: 'Proyecto experimental — úsalo bajo tu propia responsabilidad.',
+      setup_label: 'Instalación',
+      setup_title: '¿Cómo usar DevOS?',
+      setup_desc: 'Sigue estos pasos para poner en marcha DevOS en minutos.',
+      s1_title: 'Descarga la ISO',
+      s1_desc: 'Obtén la imagen ISO desde el link de descarga oficial. Tamaño aproximado: 2–3 GB.',
+      s2_title: 'Graba en USB o abre en VM',
+      s2_desc: 'Usa Balena Etcher o Rufus para crear un USB booteable. O simplemente carga la ISO en VirtualBox / QEMU.',
+      s3_title: 'Arranca desde USB o VM',
+      s3_desc: 'Reinicia tu equipo y selecciona el USB en el menú de arranque, o inicia la máquina virtual con la ISO cargada.',
+      s4_title: 'Espera y explora',
+      s4_desc: 'Verás logs durante el arranque. Es normal. Una vez que cargue el escritorio XFCE, puedes comenzar a explorar DevOS en modo Live. Para ver info del sistema instala fastfetch:',
+      s5_title: 'Configura el panel XFCE',
+      s5_desc: 'Arrastra el panel a la parte inferior, haz clic derecho → Configurar panel. Ajusta el ancho al máximo y bloquéalo.',
+      sudo_label: '🔑 Contraseña sudo:',
+      sudo_desc: 'La contraseña para comandos que requieran',
+      sudo_desc2: 'en el sistema Live es',
+      dl_label: 'Descarga',
+      dl_title: 'Obtén DevOS ahora',
+      dl_desc: 'Descarga gratuita y de código abierto. Funciona en USB o máquina virtual.',
+      dl1_desc: 'Imagen ISO completa para arranque en USB o máquina virtual. Incluye XFCE y todos los scripts generados por IA.',
+      dl_available: 'Disponible',
+      dl1_btn: '↓ Descargar DevOS-Live_v1.0.iso',
+      dl2_desc: 'Kit completo para compilar DevOS desde cero en español. Scripts, configuraciones y guías de construcción.',
+      dl2_btn: '↓ Descargar Build Kit ES',
+      dl3_desc: 'Kit completo para compilar DevOS desde cero en inglés. Scripts, configuraciones y guías de construcción.',
+      dl3_available: 'Disponible',
+      dl3_btn: '↓ Descargar Build Kit EN',
+      dl_footer: 'Open Source · Gratis · Sin restricciones ·',
+      footer_copy: '© 2024 AngelDev2343 · Licencia Open Source · Proyecto Experimental',
+      footer_process: 'Ver proceso',
+    },
+    en: {
+      nav_features: 'Features',
+      nav_ai: 'About AI',
+      nav_setup: 'Setup',
+      nav_download: 'Download',
+      hero_tag: 'Experimental project · 80% AI',
+      hero_sub: '<strong>Linux Live</strong> operating system based on Fedora (RPM), developed largely by artificial intelligence. Lightweight, experimental, and designed to show how far AI can go in complex software development.',
+      hero_dl: '↓ Download ISO v1.0',
+      hero_gh: 'View on GitHub →',
+      scroll: 'scroll',
+      feat_label: 'Features',
+      feat_title: 'Everything included<br>in DevOS',
+      feat_desc: 'An operating system designed to explore, test and understand how far AI can go in real software development.',
+      f1_title: 'Linux Live Boot',
+      f1_desc: 'Boot directly from USB or virtual machine without installing anything on your hard drive. Zero risk to your current system.',
+      f2_title: '80% built by AI',
+      f2_desc: 'System scripts, bug fixes and architecture generated mainly by Claude and ChatGPT. A real AI development experiment.',
+      f3_title: 'XFCE Desktop',
+      f3_desc: 'Lightweight and fast desktop environment with configurable XFCE Panel as a classic taskbar. Perfect for modest hardware.',
+      f4_title: 'Fedora RPM Base',
+      f4_desc: 'Built on the solid Fedora base with RPM package system, compatible with a huge ecosystem of Linux software.',
+      f5_title: 'Minimal requirements',
+      f5_desc: 'You only need 4 CPU cores, 2 GB of RAM and 15 GB of storage to run it smoothly in a VM or real hardware.',
+      f6_title: '100% Experimental',
+      f6_desc: 'A transparent project that documents the real AI development process, including its limitations and curious behaviors.',
+      ai_label: 'Artificial Intelligence',
+      ai_title: 'Mostly built<br>by machines',
+      ai_desc: 'DevOS is an honest experiment: we show exactly how much and how AI contributed to the project.',
+      ai_stat1: 'of the code generated by AI',
+      ai_stat2: 'days of intense work',
+      ai_p1: 'Claude (scripts + debugging)',
+      ai_p2: 'ChatGPT (fixes + details)',
+      ai_p3: 'Human intervention',
+      ai_c1: 'Generated the <strong>majority of system scripts</strong> and solved most of the debugging. It was the main engine of the project.',
+      ai_c2: 'Helped by <strong>fixing small errors</strong> and refining specific details of the operating system.',
+      ai_c3_label: '// Note about AI',
+      ai_c3: 'A curious behavior: AI <strong>repeats solutions that already failed</strong>, even when told so. This shows it still requires constant human supervision.',
+      spec_label: 'Specifications',
+      spec_title: 'System requirements',
+      spec_desc: 'DevOS is designed to work on accessible hardware. These are the minimum recommended requirements.',
+      spec_cpu: 'CPU',
+      spec_cpu_val: '4 cores',
+      spec_storage: 'Storage',
+      spec_mode: 'Usage mode',
+      spec_base: 'Base',
+      spec_desktop: 'Desktop',
+      spec_ver: 'Version',
+      warn_title: '⚠ Important warnings',
+      warn1: 'The desktop installer <strong>DOES NOT WORK</strong> and can erase your disk. Do not use it.',
+      warn2: 'It is recommended to use DevOS only as a <strong>Live OS</strong> or inside a virtual machine.',
+      warn3: 'During boot you will see <strong>many logs on screen</strong>. This is normal, just wait for the system to fully load.',
+      warn4: 'Experimental project — use it at your own risk.',
+      setup_label: 'Setup',
+      setup_title: 'How to use DevOS?',
+      setup_desc: 'Follow these steps to get DevOS running in minutes.',
+      s1_title: 'Download the ISO',
+      s1_desc: 'Get the ISO image from the official download link. Approximate size: 2–3 GB.',
+      s2_title: 'Flash to USB or open in VM',
+      s2_desc: 'Use Balena Etcher or Rufus to create a bootable USB. Or simply load the ISO in VirtualBox / QEMU.',
+      s3_title: 'Boot from USB or VM',
+      s3_desc: 'Restart your computer and select the USB in the boot menu, or start the virtual machine with the ISO loaded.',
+      s4_title: 'Wait and explore',
+      s4_desc: 'You will see logs during boot. That\'s normal. Once the XFCE desktop loads, you can start exploring DevOS in Live mode. To view system info install fastfetch:',
+      s5_title: 'Configure the XFCE panel',
+      s5_desc: 'Drag the panel to the bottom, right-click → Panel Preferences. Set the width to maximum and lock it.',
+      sudo_label: '🔑 Sudo password:',
+      sudo_desc: 'The password for commands that require',
+      sudo_desc2: 'on the Live system is',
+      dl_label: 'Download',
+      dl_title: 'Get DevOS now',
+      dl_desc: 'Free and open source download. Works on USB or virtual machine.',
+      dl1_desc: 'Complete ISO image for booting from USB or virtual machine. Includes XFCE and all AI-generated scripts.',
+      dl_available: 'Available',
+      dl1_btn: '↓ Download DevOS-Live_v1.0.iso',
+      dl2_desc: 'Complete kit to build DevOS from scratch in Spanish. Scripts, configurations and build guides.',
+      dl2_btn: '↓ Download Build Kit ES',
+      dl3_desc: 'Complete build kit to compile DevOS from scratch in English. Scripts, configurations and build guides.',
+      dl3_available: 'Available',
+      dl3_btn: '↓ Download Build Kit EN',
+      dl_footer: 'Open Source · Free · No restrictions ·',
+      footer_copy: '© 2024 AngelDev2343 · Open Source License · Experimental Project',
+      footer_process: 'View process',
+    }
+  };
+
+  let currentLang = 'es';
+
+  function applyLang(lang) {
+    const t = translations[lang];
+    document.body.classList.add('lang-switching');
+
+    setTimeout(() => {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) {
+          el.innerHTML = t[key];
+        }
+      });
+      document.documentElement.lang = lang;
+      document.body.classList.remove('lang-switching');
+    }, 150);
+
+    // Update switcher buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    currentLang = lang;
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.lang !== currentLang) {
+        applyLang(btn.dataset.lang);
+      }
+    });
+  });
+
+  // ── PARTICLES ──
   const container = document.getElementById('particles');
   for (let i = 0; i < 30; i++) {
     const p = document.createElement('div');
@@ -1405,7 +1660,7 @@
     container.appendChild(p);
   }
 
-  // Scroll reveal
+  // ── SCROLL REVEAL ──
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -1417,7 +1672,7 @@
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
 
-  // Nav highlight
+  // ── NAV HIGHLIGHT ──
   window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
     nav.style.borderBottomColor = window.scrollY > 50
