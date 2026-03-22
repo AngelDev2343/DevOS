@@ -1,6 +1,6 @@
 ---
 <p align="center">
-  <a href="README.md">
+  <a href="README_EN.md">
     <img src="https://img.shields.io/badge/Read%20in-English-1f6feb?style=for-the-badge&logo=github">
   </a>
   <a href="README_ES.md">
