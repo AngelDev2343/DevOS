@@ -12,11 +12,11 @@
 
 ## 🛠️ Características Principales
 
-- Sistema operativo **Linux Live** basado en Fedora (RPM).  
-- Desarrollo experimental **80% impulsado por inteligencia artificial**.  
-- Escritorio ligero **XFCE** con XFCE Panel configurable como barra de tareas.  
-- Diseñado para usuarios interesados en **IA y avances tecnológicos**.  
-- Modo Live, ideal para pruebas sin instalar en disco duro.  
+- Sistema operativo **Linux Live** basado en Fedora (RPM).
+- Desarrollo experimental **80% impulsado por inteligencia artificial**.
+- Escritorio ligero **XFCE** con XFCE Panel configurable como barra de tareas.
+- Diseñado para usuarios interesados en **IA y avances tecnológicos**.
+- Modo Live, ideal para pruebas sin instalar en disco duro.
 
 ---
 
@@ -24,8 +24,8 @@
 
 Este proyecto fue desarrollado en gran parte con ayuda de inteligencia artificial:
 
-- **Claude** generó la mayoría de los scripts del sistema y resolvió gran parte del debugging.  
-- **ChatGPT** ayudó corrigiendo errores pequeños y refinando detalles.  
+- **Claude** generó la mayoría de los scripts del sistema y resolvió gran parte del debugging.
+- **ChatGPT** ayudó corrigiendo errores pequeños y refinando detalles.
 
 Aun así, este proyecto **no habría sido posible sin intervención humana**. Hubo dirección, pruebas, decisiones y mucha paciencia detrás del proceso.
 
@@ -37,53 +37,85 @@ Un comportamiento curioso de la IA es que muchas veces repite soluciones que **y
 
 Esto demuestra que, aunque la IA ha avanzado bastante, **aún requiere supervisión humana constante**.
 
-📎 Puedes ver parte del proceso aquí:  
+📎 Puedes ver parte del proceso aquí:
 https://claude.ai/share/b553961b-feb0-467a-b3ee-2c5baccf3684
 
 ---
 
 ## ⚠️ Advertencia
 
-- El instalador que aparece en el escritorio **NO FUNCIONA** y puede **borrar tu disco**.  
-- Solo se recomienda usar DevOS como **Live OS** o dentro de una máquina virtual.  
+- El instalador que aparece en el escritorio **NO FUNCIONA** y puede **borrar tu disco**.
+- Solo se recomienda usar DevOS como **Live OS** o dentro de una máquina virtual.
 - Durante el arranque verás **muchos logs en pantalla**. Esto es **normal**, solo espera a que el sistema cargue completamente.
 
 ---
 
 ## 🖥️ Entorno de Escritorio
 
-DevOS utiliza **XFCE**, un entorno de escritorio ligero y rápido.  
+DevOS utiliza **XFCE**, un entorno de escritorio ligero y rápido.
 El panel predeterminado (XFCE Panel) es flotante y vacío. Para configurarlo como barra de tareas clásica:
 
-1. Arrastra el panel hacia la **parte inferior izquierda** de la pantalla.  
-2. Haz clic derecho → **Configurar panel**.  
-3. Ajusta el **ancho al máximo** y bloquea el panel para que no se mueva.  
+1. Arrastra el panel hacia la **parte inferior izquierda** de la pantalla.
+2. Haz clic derecho → **Configurar panel**.
+3. Ajusta el **ancho al máximo** y bloquea el panel para que no se mueva.
 
 ---
 
 ## 🚀 Cómo usar DevOS
 
-1. Descarga la ISO desde los links de descarga abajo.  
-2. Grábala en un **USB booteable** o ejecútala en una **máquina virtual** (VirtualBox, QEMU, etc.).  
-3. Arranca desde el USB o VM y espera a que el sistema termine de cargar.  
+1. Descarga la ISO desde los links de descarga abajo.
+2. Grábala en un **USB booteable** o ejecútala en una **máquina virtual** (VirtualBox, QEMU, etc.).
+3. Arranca desde el USB o VM y espera a que el sistema termine de cargar.
 4. Explora DevOS en modo Live, sin instalar nada en tu disco.
 
 > La contraseña del usuario de Live es "**devos**"
 
 ---
 
+## 🖱️ Cómo acceder a la interfaz gráfica
+
+Si el sistema arranca en modo **kiosk** (solo terminal sin GUI), sigue estos pasos para iniciar el escritorio manualmente:
+
+**Paso 1 — Abre una TTY**
+
+Presiona **Ctrl + Alt + F2** para cambiar a una terminal de texto.
+
+**Paso 2 — Inicia sesión**
+
+Cuando el sistema pida login, escribe:
+
+```
+kiosk
+```
+
+Luego ingresa la contraseña:
+
+```
+devos
+```
+
+**Paso 3 — Lanza el escritorio XFCE**
+
+```bash
+startx
+```
+
+Espera unos segundos y el escritorio XFCE cargará automáticamente.
+
+---
+
 ## 💻 Requisitos Recomendados
 
-- CPU: 4 núcleos  
-- RAM: 2 GB  
-- Almacenamiento: 15 GB  
+- CPU: 4 núcleos
+- RAM: 2 GB
+- Almacenamiento: 15 GB
 - Modo Live o máquina virtual
 
 ---
 
 ## 📥 Links de Descarga
 
-- [DevOS-Live_v1.0.iso](https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso)  
+- [DevOS-Live_v1.0.iso](https://github.com/AngelDev2343/DevOS/releases/download/Live_v1.0/DevOS-Live_v1.0.iso)
 - [Build-Kit_ES.zip](https://github.com/AngelDev2343/DevOS/releases/download/Build_Kit_v1.0-ES/devos-build-kit-es-final.zip)
 - [Build-Kit_EN.zip](https://github.com/AngelDev2343/DevOS/releases/download/Build_Kit_v1.0/devos-build-kit-en-final.zip)
 
